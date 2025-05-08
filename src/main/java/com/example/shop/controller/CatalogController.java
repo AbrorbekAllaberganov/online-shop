@@ -56,5 +56,12 @@ public class CatalogController {
         ApiResponse response = catalogService.getCatalogsByCategoryId(categoryId);
         return ResponseEntity.status(response.isStatus() ? 200 : 404).body(response);
     }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<ApiResponse> getCatalogsWithoutPagination(@RequestParam(required = false) Long categoryId,
+                                                                    @RequestParam(defaultValue = "") String name){
+        ApiResponse response = catalogService.getCatalogsByName(categoryId, name);
+        return ResponseEntity.status(response.isStatus()?200:404).body(response);
+    }
 }
 

@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 public class AttachmentController {
     private final AttachmentService attachmentService;
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = "multipart/form-data")
     public ResponseEntity<?> saveFile(@RequestParam(name = "file") MultipartFile multipartFile) {
         ApiResponse response=attachmentService.saveAttachment(multipartFile);
         return ResponseEntity.status(response.isStatus()?201:409).body(response);

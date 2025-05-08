@@ -36,6 +36,12 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/without-pagination")
+    public ResponseEntity<ApiResponse> getAllCategoriesWithoutPagination(@RequestParam(defaultValue = "") String name) {
+        ApiResponse response = categoryService.getAllCategoriesWithoutPagination(name);
+        return ResponseEntity.ok(response);
+    }
+
 
     // Update
     @PutMapping("/{id}")
@@ -50,4 +56,7 @@ public class CategoryController {
         ApiResponse response = categoryService.deleteCategory(id);
         return ResponseEntity.status(response.isStatus()?200:404).body(response);
     }
+
+
+
 }

@@ -39,6 +39,9 @@ public class ProductGetDto {
         this.descriptionEn = product.getDescriptionEn();
         this.descriptionRu = product.getDescriptionRu();
         this.descriptionUz = product.getDescriptionUz();
+        this.nameUz = product.getNameUz();
+        this.nameRu = product.getNameRu();
+        this.nameEn = product.getNameEn();
         this.price = product.getPrice();
         this.isSelected = product.getIsSelected();
         this.isNew = product.getIsNew();

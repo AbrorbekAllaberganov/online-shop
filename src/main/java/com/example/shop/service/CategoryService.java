@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -88,5 +89,11 @@ public class CategoryService {
 
         categoryRepository.deleteById(id);
         return new ApiResponse("category deleted", false);
+    }
+
+    public ApiResponse getAllCategoriesWithoutPagination(String name) {
+        name = "%" + name + "%";
+        List<Category> categoryList = categoryRepository.findAllByName(name);
+        return new ApiResponse("categories", true, categoryList);
     }
 }

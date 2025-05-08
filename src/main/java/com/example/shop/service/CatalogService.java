@@ -105,6 +105,7 @@ public class CatalogService {
         catalogRepository.deleteById(id);
         return new ApiResponse("Catalog deleted", true);
     }
+
     public ApiResponse getCatalogsByCategoryId(Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
             return new ApiResponse("Category not found", false);
@@ -112,6 +113,18 @@ public class CatalogService {
 
         List<Catalog> catalogs = catalogRepository.findAllByCategoryIdOrderByCreatedAtDesc(categoryId);
         return new ApiResponse("Catalogs by category", true, catalogs);
+    }
+
+    public ApiResponse getCatalogsByName(Long categoryId, String name) {
+        if (categoryId != null)
+            if (!categoryRepository.existsById(categoryId))
+                return new ApiResponse("category not found", false);
+
+        name = "%" + name + "%";
+
+        return new ApiResponse("catalogs", true,
+                catalogRepository.getCatalogsByNameAndCategory(categoryId, name)
+        );
     }
 
 }
