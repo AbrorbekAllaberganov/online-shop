@@ -18,6 +18,7 @@ public class ProductGetDto {
     String catalogNameRu;
     String catalogNameEn;
 
+    Long id;
     String nameUz;
     String nameRu;
     String nameEn;
@@ -32,6 +33,7 @@ public class ProductGetDto {
 
 
     public ProductGetDto(Product product){
+        this.id = product.getId();
         this.catalogId = product.getCatalog().getId();
         this.catalogNameUz = product.getCatalog().getNameUz();
         this.catalogNameRu = product.getCatalog().getNameRu();

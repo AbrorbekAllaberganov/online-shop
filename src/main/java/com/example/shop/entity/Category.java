@@ -31,6 +31,8 @@ public class Category {
     @OneToOne
     Attachment photo;
 
+    Boolean isActive;
+
     @CreationTimestamp
     LocalDateTime createdAt;
 

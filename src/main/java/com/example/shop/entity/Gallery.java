@@ -1,44 +1,31 @@
 package com.example.shop.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Catalog {
+public class Gallery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, unique = true)
-    String nameUz;
-    @Column(nullable = false, unique = true)
-    String nameRu;
-    @Column(nullable = false, unique = true)
-    String nameEn;
-
-    @OneToOne
-    Attachment photo;
-
-    Boolean isActive;
-
-    @ManyToOne
-    Category category;
+    @OneToMany
+    List<Attachment> photoList;
 
     @CreationTimestamp
     LocalDateTime createdAt;
 
     @UpdateTimestamp
-    LocalDateTime updateAt;
+    LocalDateTime updatedAt;
 }

@@ -40,10 +40,11 @@ public class ProductController {
 
     @GetMapping("/by-catalog/{catalogId}")
     public ResponseEntity<ApiResponse> getByCatalogId(
+            @RequestParam(defaultValue = "true") Boolean isActive,
             @PathVariable Long catalogId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        ApiResponse response = productService.getProductsByCatalogId(catalogId, page, size);
+        ApiResponse response = productService.getProductsByCatalogId(isActive, catalogId, page, size);
         return ResponseEntity.ok(response);
     }
 
@@ -61,5 +62,24 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size) {
         ApiResponse response = productService.getProductsByIsSelected(page, size);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("get-all")
+    public ResponseEntity<ApiResponse> getAllProducts(
+            @RequestParam(defaultValue = "true") Boolean isActive,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        ApiResponse response = productService.getAll(isActive, page, size);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/change-status")
+    public ResponseEntity<ApiResponse> changeStatus(
+            @RequestParam Long productId,
+            @RequestParam Boolean status
+    ){
+        ApiResponse response = productService.changeStatus(productId, status);
+        return ResponseEntity.status(response.isStatus()?200:404).body(response);
     }
 }

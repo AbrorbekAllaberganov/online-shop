@@ -1,46 +1,32 @@
 package com.example.shop.exxeption;
 
+import com.example.shop.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handle specific exceptions
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ApiResponse> handleNotFound(ResourceNotFoundException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<Object> handleDuplicate(DuplicateResourceException ex) {
+    public ResponseEntity<ApiResponse> handleDuplicate(DuplicateResourceException ex) {
         return buildResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
-    // Handle general runtime exceptions
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handleRuntime(RuntimeException ex) {
-        return buildResponse("Internal server error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+    private ResponseEntity<ApiResponse> buildResponse(String message, HttpStatus status) {
+        return ResponseEntity.status(status).body(new ApiResponse(message, false));
     }
 
-    // Handle all uncaught exceptions
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAll(Exception ex) {
-        return buildResponse("Unexpected error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ApiResponse> handleAll(Exception ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<Object> buildResponse(String message, HttpStatus status) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("message", message);
 
-        return new ResponseEntity<>(body, status);
-    }
 }

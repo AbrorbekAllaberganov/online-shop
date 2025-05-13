@@ -29,11 +29,12 @@ public class CatalogController {
     // Read (Paginated, Sorted by createdAt)
     @GetMapping
     public ResponseEntity<ApiResponse> getAllCatalogs(
+            @RequestParam(defaultValue = "true") Boolean isActive,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "false") boolean asc
     ) {
-        ApiResponse response = catalogService.getAllCatalogs(page, size, asc);
+        ApiResponse response = catalogService.getAllCatalogs(isActive, page, size, asc);
         return ResponseEntity.ok(response);
     }
 
@@ -58,10 +59,23 @@ public class CatalogController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<ApiResponse> getCatalogsWithoutPagination(@RequestParam(required = false) Long categoryId,
-                                                                    @RequestParam(defaultValue = "") String name){
-        ApiResponse response = catalogService.getCatalogsByName(categoryId, name);
+    public ResponseEntity<ApiResponse> getCatalogsWithoutPagination(
+            @RequestParam(defaultValue = "true") Boolean isActive,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "") String name) {
+        ApiResponse response = catalogService.getCatalogsByName(isActive, categoryId, name);
+        return ResponseEntity.status(response.isStatus() ? 200 : 404).body(response);
+    }
+
+    @PatchMapping("/change-status")
+    public ResponseEntity<ApiResponse> changeStatus(
+            @RequestParam Long catalogId,
+            @RequestParam Boolean status
+    ){
+        ApiResponse response = catalogService.changeStatus(catalogId, status);
         return ResponseEntity.status(response.isStatus()?200:404).body(response);
     }
+
 }
+
 

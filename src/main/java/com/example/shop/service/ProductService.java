@@ -94,9 +94,9 @@ public class ProductService {
         return new ApiResponse("Product deleted (deactivated)", true);
     }
 
-    public ApiResponse getProductsByCatalogId(Long catalogId, int page, int size) {
+    public ApiResponse getProductsByCatalogId(Boolean isActive, Long catalogId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<Product> productPage = productRepository.findAllByCatalogIdAndIsActiveTrue(catalogId, pageable);
+        Page<Product> productPage = productRepository.findAllByCatalogIdAndIsActive(catalogId, isActive, pageable);
         List<ProductGetDto> dtoList = productPage.getContent().stream()
                 .map(ProductGetDto::new)
                 .toList();
@@ -145,5 +145,30 @@ public class ProductService {
         product.setDescriptionUz(dto.getDescriptionUz());
         product.setPrice(dto.getPrice());
         product.setPhotoList(attachments);
+    }
+
+    public ApiResponse getAll(Boolean isActive, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Product> productPage = productRepository.findAllByIsActive(isActive, pageable);
+        List<ProductGetDto> dtoList = productPage.getContent().stream()
+                .map(ProductGetDto::new)
+                .toList();
+
+        return new ApiResponse("products", true, new PaginationGetDto<>(
+                dtoList,
+                productPage.getTotalElements()
+        ));
+    }
+
+    public ApiResponse changeStatus(Long productId, Boolean status) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isEmpty())
+            return new ApiResponse("Product not found", false);
+
+        Product product = productOptional.get();
+        product.setIsActive(status);
+        productRepository.save(product);
+
+        return new ApiResponse("product updated", true);
     }
 }

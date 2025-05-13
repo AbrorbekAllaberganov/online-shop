@@ -19,38 +19,38 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    // Create
+
     @PostMapping
     public ResponseEntity<ApiResponse> createCategory(@RequestBody CategoryDto categoryDto) {
         ApiResponse response = categoryService.createCategory(categoryDto);
         return ResponseEntity.status(response.isStatus()?200:409).body(response);
     }
 
-    // Read (Paginated, Sorted by createdAt)
     @GetMapping
     public ResponseEntity<ApiResponse> getAllCategories(
+            @RequestParam(defaultValue = "true") Boolean isActive,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        ApiResponse response = categoryService.getAllCategories(page, size);
+        ApiResponse response = categoryService.getAllCategories(isActive, page, size);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/without-pagination")
-    public ResponseEntity<ApiResponse> getAllCategoriesWithoutPagination(@RequestParam(defaultValue = "") String name) {
-        ApiResponse response = categoryService.getAllCategoriesWithoutPagination(name);
+    public ResponseEntity<ApiResponse> getAllCategoriesWithoutPagination(
+            @RequestParam(defaultValue = "true") Boolean isActive,
+            @RequestParam(defaultValue = "") String name) {
+        ApiResponse response = categoryService.getAllCategoriesWithoutPagination(isActive, name);
         return ResponseEntity.ok(response);
     }
 
 
-    // Update
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
         ApiResponse response = categoryService.updateCategory(id, categoryDto);
         return ResponseEntity.status(response.isStatus()?200:404).body(response);
     }
 
-    // Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long id) {
         ApiResponse response = categoryService.deleteCategory(id);
@@ -58,5 +58,13 @@ public class CategoryController {
     }
 
 
+    @PatchMapping("/change-status")
+    public ResponseEntity<ApiResponse> changeStatus(
+            @RequestParam Long categoryId,
+            @RequestParam Boolean status
+    ){
+        ApiResponse response = categoryService.changeStatus(categoryId, status);
+        return ResponseEntity.status(response.isStatus()?200:404).body(response);
+    }
 
 }
