@@ -24,7 +24,7 @@ public class DataLoader implements CommandLineRunner {
             User user = new User();
             user.setRole(Role.ADMIN);
             user.setUserName("admin");
-            user.setPassword(passwordEncoder.encode("123"));
+            user.setPassword(passwordEncoder.encode("OIL_GAS_SYSTEM_123"));
             user.setFullName("Admin Super");
             user.setActive(true);
 

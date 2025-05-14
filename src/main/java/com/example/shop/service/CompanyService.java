@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -23,7 +24,7 @@ public class CompanyService {
         Optional<Company> companyOptional = companyRepository.findTopByOrderByIdAsc();
         return companyOptional
                 .map(company -> new ApiResponse("company info", true, company))
-                .orElseGet(() -> new ApiResponse("company info is not found", false));
+                .orElseGet(() -> new ApiResponse("company info is not found", true, new ArrayList<>()));
 
     }
 

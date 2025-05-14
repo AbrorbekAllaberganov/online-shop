@@ -9,6 +9,7 @@ import com.example.shop.repository.GalleryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class GalleryService {
         Optional<Gallery> galleryOptional = galleryRepository.findTopByOrderByIdAsc();
         return galleryOptional
                 .map(gallery -> new ApiResponse("gallery", true, gallery))
-                .orElseGet(() -> new ApiResponse("gallery is not found", false));
+                .orElseGet(() -> new ApiResponse("gallery is not found", true, new ArrayList<>()));
     }
 
     public ApiResponse deleteImage(String hashId){
