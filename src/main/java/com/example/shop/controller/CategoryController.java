@@ -58,7 +58,7 @@ public class CategoryController {
     }
 
 
-    @PatchMapping("/change-status")
+    @PutMapping("/change-status")
     public ResponseEntity<ApiResponse> changeStatus(
             @RequestParam Long categoryId,
             @RequestParam Boolean status

@@ -74,7 +74,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/change-status")
+    @PutMapping("/change-status")
     public ResponseEntity<ApiResponse> changeStatus(
             @RequestParam Long productId,
             @RequestParam Boolean status

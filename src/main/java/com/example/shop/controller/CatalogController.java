@@ -67,7 +67,7 @@ public class CatalogController {
         return ResponseEntity.status(response.isStatus() ? 200 : 404).body(response);
     }
 
-    @PatchMapping("/change-status")
+    @PutMapping("/change-status")
     public ResponseEntity<ApiResponse> changeStatus(
             @RequestParam Long catalogId,
             @RequestParam Boolean status
