@@ -71,9 +71,17 @@ public class CatalogController {
     public ResponseEntity<ApiResponse> changeStatus(
             @RequestParam Long catalogId,
             @RequestParam Boolean status
-    ){
+    ) {
         ApiResponse response = catalogService.changeStatus(catalogId, status);
-        return ResponseEntity.status(response.isStatus()?200:404).body(response);
+        return ResponseEntity.status(response.isStatus() ? 200 : 404).body(response);
+    }
+
+    @GetMapping("/lang/get-all")
+    public ResponseEntity<ApiResponse> getCatalogsByLang(@RequestParam Long categoryId,
+                                                         @RequestParam String lang
+    ) {
+        ApiResponse response = catalogService.getAllByLang(categoryId, lang);
+        return ResponseEntity.status(response.isStatus() ? 200 : 404).body(response);
     }
 
 }

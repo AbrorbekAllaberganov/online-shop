@@ -2,6 +2,7 @@ package com.example.shop.service;
 
 import com.example.shop.dto.ApiResponse;
 import com.example.shop.dto.CatalogDto;
+import com.example.shop.dto.CatalogGetDto;
 import com.example.shop.entity.Attachment;
 import com.example.shop.entity.Catalog;
 import com.example.shop.entity.Category;
@@ -11,7 +12,6 @@ import com.example.shop.repository.CatalogRepository;
 import com.example.shop.repository.CategoryRepository;
 import com.example.shop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -148,5 +148,22 @@ public class CatalogService {
         catalogRepository.save(catalog);
 
         return new ApiResponse("catalog updated", true, catalog);
+    }
+
+    public ApiResponse getAllByLang(Long categoryId, String lang) {
+        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
+        if (categoryOpt.isEmpty()) {
+            return new ApiResponse("Category not found", false);
+        }
+
+        List<CatalogGetDto> catalogGetDtoList =
+                catalogRepository.findAllByCategoryIdAndIsActiveOrderByCreatedAtDesc(
+                        categoryId, true
+                ).
+                        stream()
+                        .map(catalog -> new CatalogGetDto(catalog, lang))
+                        .toList();
+
+        return new ApiResponse("catalogs", true, catalogGetDtoList);
     }
 }

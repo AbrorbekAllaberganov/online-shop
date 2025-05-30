@@ -28,4 +28,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 
     Page<Category> findAllByIsActive(Boolean isActive, Pageable pageable);
+    List<Category> findAllByIsActiveOrderById(Boolean isActive);
 }

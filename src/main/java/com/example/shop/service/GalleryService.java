@@ -33,6 +33,8 @@ public class GalleryService {
             return new ApiResponse("attachment not found", false);
 
         List<Attachment> attachmentList = gallery.getPhotoList();
+        if (attachmentList == null)
+            attachmentList = new ArrayList<>();
         attachmentList.add(optionalAttachment.get());
 
         gallery.setPhotoList(attachmentList);

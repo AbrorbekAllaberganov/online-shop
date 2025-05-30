@@ -1,9 +1,6 @@
 package com.example.shop.service;
 
-import com.example.shop.dto.ApiResponse;
-import com.example.shop.dto.PaginationGetDto;
-import com.example.shop.dto.ProductDto;
-import com.example.shop.dto.ProductGetDto;
+import com.example.shop.dto.*;
 import com.example.shop.entity.Attachment;
 import com.example.shop.entity.Catalog;
 import com.example.shop.entity.Product;
@@ -120,11 +117,37 @@ public class ProductService {
         ));
     }
 
+    public ApiResponse getProductsByIsNewWithLang(String lang, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Product> productPage = productRepository.findAllByIsNewTrueAndIsActiveTrue(pageable);
+        List<ProductGetDtoWithLang> dtoList = productPage.getContent().stream()
+                .map(product -> new ProductGetDtoWithLang(product, lang))
+                .toList();
+
+        return new ApiResponse("New products", true, new PaginationGetDto<>(
+                dtoList,
+                productPage.getTotalElements()
+        ));
+    }
+
     public ApiResponse getProductsByIsSelected(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Product> productPage = productRepository.findAllByIsSelectedTrueAndIsActiveTrue(pageable);
         List<ProductGetDto> dtoList = productPage.getContent().stream()
                 .map(ProductGetDto::new)
+                .toList();
+
+        return new ApiResponse("Selected products", true, new PaginationGetDto<>(
+                dtoList,
+                productPage.getTotalElements()
+        ));
+    }
+
+    public ApiResponse getProductsByIsSelectedWithLang(String lang, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Product> productPage = productRepository.findAllByIsSelectedTrueAndIsActiveTrue(pageable);
+        List<ProductGetDtoWithLang> dtoList = productPage.getContent().stream()
+                .map(product -> new ProductGetDtoWithLang(product, lang))
                 .toList();
 
         return new ApiResponse("Selected products", true, new PaginationGetDto<>(
@@ -170,5 +193,22 @@ public class ProductService {
         productRepository.save(product);
 
         return new ApiResponse("product updated", true);
+    }
+
+    public ApiResponse getProductsByLang(Long catalogId, String lang, int page, int size) {
+        Optional<Catalog> catalogOptional = catalogRepository.findById(catalogId);
+        if (catalogOptional.isEmpty())
+            return new ApiResponse("catalog not found", false);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Product> productPage = productRepository.findAllByCatalogIdAndIsActive(catalogId, true, pageable);
+        List<ProductGetDtoWithLang> dtoList = productPage.getContent().stream()
+                .map(product -> new ProductGetDtoWithLang(product, lang))
+                .toList();
+
+        return new ApiResponse("Selected products", true, new PaginationGetDto<>(
+                dtoList,
+                productPage.getTotalElements()
+        ));
     }
 }

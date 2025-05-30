@@ -2,6 +2,7 @@ package com.example.shop.service;
 
 import com.example.shop.dto.ApiResponse;
 import com.example.shop.dto.CategoryDto;
+import com.example.shop.dto.CategoryGetDto;
 import com.example.shop.entity.Attachment;
 import com.example.shop.entity.Category;
 import com.example.shop.exxeption.BadRequestException;
@@ -120,5 +121,15 @@ public class CategoryService {
 
         categoryRepository.save(category);
         return new ApiResponse("category updated", true);
+    }
+
+    public ApiResponse getCategoriesByLang(String lang) {
+        List<CategoryGetDto> categoryGetDtoList =
+                categoryRepository.findAllByIsActiveOrderById(true)
+                        .stream()
+                        .map(category->new CategoryGetDto(category, lang))
+                        .toList();
+
+        return new ApiResponse("categories", true, categoryGetDtoList);
     }
 }

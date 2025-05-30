@@ -67,4 +67,10 @@ public class CategoryController {
         return ResponseEntity.status(response.isStatus()?200:404).body(response);
     }
 
+    @GetMapping("/lang/get-all")
+    public ResponseEntity<ApiResponse> getCategoriesByLang(@RequestParam String lang){
+        ApiResponse response = categoryService.getCategoriesByLang(lang);
+        return ResponseEntity.status(response.isStatus()?200:404).body(response);
+    }
+
 }

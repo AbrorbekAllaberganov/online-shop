@@ -56,6 +56,15 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/lang/new")
+    public ResponseEntity<ApiResponse> getByIsNewWithLang(
+            @RequestParam String lang,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        ApiResponse response = productService.getProductsByIsNewWithLang(lang, page, size);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/selected")
     public ResponseEntity<ApiResponse> getByIsSelected(
             @RequestParam(defaultValue = "0") int page,
@@ -64,12 +73,21 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/lang/selected")
+    public ResponseEntity<ApiResponse> getByIsSelectedWithLang(
+            @RequestParam String lang,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        ApiResponse response = productService.getProductsByIsSelectedWithLang(lang, page, size);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("get-all")
     public ResponseEntity<ApiResponse> getAllProducts(
             @RequestParam(defaultValue = "true") Boolean isActive,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
-    ){
+    ) {
         ApiResponse response = productService.getAll(isActive, page, size);
         return ResponseEntity.ok(response);
     }
@@ -78,8 +96,19 @@ public class ProductController {
     public ResponseEntity<ApiResponse> changeStatus(
             @RequestParam Long productId,
             @RequestParam Boolean status
-    ){
+    ) {
         ApiResponse response = productService.changeStatus(productId, status);
-        return ResponseEntity.status(response.isStatus()?200:404).body(response);
+        return ResponseEntity.status(response.isStatus() ? 200 : 404).body(response);
+    }
+
+    @GetMapping("/lang/get-all")
+    public ResponseEntity<ApiResponse> getProductsByLang(
+            @RequestParam Long catalogId,
+            @RequestParam String lang,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        ApiResponse response = productService.getProductsByLang(catalogId, lang, page, size);
+        return ResponseEntity.status(response.isStatus() ? 200 : 404).body(response);
     }
 }
